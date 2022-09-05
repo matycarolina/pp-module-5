@@ -4,13 +4,14 @@ import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
+import { useLocation } from "react-router-dom";
 import {
   fill,
   orderAlpha,
   filterNames,
   countFilterNames,
-  BASE_URL,
-} from "../controller/functions";
+} from "../routes/getAllUsers";
+import { findUser } from "../routes/getUser";
 
 interface User {
   id: number;
@@ -22,18 +23,24 @@ interface User {
 const LabTabs = () => {
   const [value, setValue] = useState("1");
   const [users, setUsers] = useState([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      fill().then((user) => setUsers(user));
-    };
-
-    fetchData().catch(console.error);
-  }, []);
+  const [profile, setProfile] = useState({});
+  const { pathname, state } = useLocation();
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      fill(state.email, state.pwd).then((allUsers) => setUsers(allUsers));
+    };
+    const fetchUser = async () => {
+      findUser(state.email, state.pwd).then((user) => setProfile(user));
+    };
+
+    fetchData().catch(console.error);
+    fetchUser().catch(console.error);
+  }, []);
 
   const usersList = users.map((user: User, index) => {
     return (
@@ -87,22 +94,39 @@ const LabTabs = () => {
     )
   );
 
+  const getProfile = Object.entries(profile).map(([key, value]) => (
+    <div key={key}>
+      <ul>
+        <li>
+          <>
+            {key.toLocaleUpperCase()}: {value}
+          </>
+        </li>
+      </ul>
+    </div>
+  ));
+
   return (
     <Box sx={{ width: "100%", typography: "body1" }}>
-      <TabContext value={value}>
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <TabList onChange={handleChange} aria-label="lab API tabs example">
-            <Tab label="All Users" value="1" />
-            <Tab label="Alphabetically Ordered" value="2" />
-            <Tab label="A, B, C names" value="3" />
-            <Tab label="No. of A, B, C names" value="4" />
-          </TabList>
-        </Box>
-        <TabPanel value="1">{usersList}</TabPanel>
-        <TabPanel value="2">{usersAlpha}</TabPanel>
-        <TabPanel value="3">{filteredNames}</TabPanel>
-        <TabPanel value="4">{countNames}</TabPanel>
-      </TabContext>
+      {users.length == 0 && <h1>Credentials Not Found</h1>}
+      {users.length !== 0 && (
+        <TabContext value={value}>
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <TabList onChange={handleChange} aria-label="lab API tabs example">
+              <Tab label="Profile" value="1" />
+              <Tab label="All Users" value="2" />
+              <Tab label="Alphabetically Ordered" value="3" />
+              <Tab label="A, B, C names" value="4" />
+              <Tab label="No. of A, B, C names" value="5" />
+            </TabList>
+          </Box>
+          <TabPanel value="1">{getProfile}</TabPanel>
+          <TabPanel value="2">{usersList}</TabPanel>
+          <TabPanel value="3">{usersAlpha}</TabPanel>
+          <TabPanel value="4">{filteredNames}</TabPanel>
+          <TabPanel value="5">{countNames}</TabPanel>
+        </TabContext>
+      )}
     </Box>
   );
 };

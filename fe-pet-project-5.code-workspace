@@ -1,9 +1,7 @@
 {
-	"folders": [
-		{
-			"name": "fe-pet-project-5",
-			"path": "."
-		}
-	],
-	"settings": {}
+    "folders": [
+        {
+            "path": "."
+        }
+    ]
 }

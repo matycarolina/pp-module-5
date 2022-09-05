@@ -1,8 +1,7 @@
 import React from "react";
-import "./App.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ButtonAppBar from "./components/AppBar";
 import LabTabs from "./components/Tabs";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./components/Home";
 import Login from "./components/Login";
 
@@ -11,12 +10,11 @@ const App = () => {
     <BrowserRouter>
       <div>
         <ButtonAppBar />
-        <br />
-        <LabTabs/>
       </div>
       <Routes>
         <Route index element={<Home />} />
         <Route path="login" element={<Login />} />
+        <Route path="info" element={<LabTabs />} />
       </Routes>
     </BrowserRouter>
   );
