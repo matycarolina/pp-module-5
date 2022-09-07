@@ -46,8 +46,9 @@ const Login = () => {
           }}
         />
         <br />
-        <BasicButton label="Log In" onClick={() => handleSubmit()} />
+        
       </div>
+      <BasicButton label="Log In" onClick={() => handleSubmit()} />
     </Box>
   );
 };

@@ -6,7 +6,7 @@ interface User {
   id: number;
   email: string;
   name: string;
-  age: number
+  age: number;
 }
 
 export const fill = async (username: string, password: string) => {
@@ -22,8 +22,7 @@ export const fill = async (username: string, password: string) => {
         Authorization: `Basic ${token}`,
       },
     });
-    const usersList = response.data.payload;
-    return usersList;
+    return response.data.payload;
   } catch (error) {
     return [];
   }
